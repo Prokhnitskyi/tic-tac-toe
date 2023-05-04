@@ -5,6 +5,7 @@ const Gameboard = (function () {
     let games = [];
     let currentGameIndex;
     let currentPlayer = 0;
+    let boardFilled = false;
 
     function Player({name = '', mark = 'X'}) {
         let gamesWon = 0;
@@ -49,10 +50,30 @@ const Gameboard = (function () {
         const currentGame = games[currentGameIndex];
         const cellIndex = element.dataset.index;
         currentGame.players[currentPlayer].makeMark(cellIndex);
+        checkWinCondition();
+
         currentPlayer = currentPlayer === 0 ? 1 : 0;
     }
+    
+    function getBoardFilledStatus() {
+        boardFilled = grid.every(cell => Boolean(cell));
+        return boardFilled;
+    }
 
-    return {renderBoard, startNewGame, makeTurn};
+    function getGridLines() {
+        return {
+            row1: grid.slice(0, 3),
+            row2: grid.slice(3, 6),
+            row3: grid.slice(6),
+            col1: [grid.at(0), grid.at(3), grid.at(6)],
+            col2: [grid.at(1), grid.at(4), grid.at(7)],
+            col3: [grid.at(2), grid.at(5), grid.at(8)],
+            diag1: [grid.at(0), grid.at(4), grid.at(8)],
+            diag2: [grid.at(2), grid.at(4), grid.at(6)]
+        }
+    }
+
+    return {renderBoard, startNewGame, makeTurn, getBoardFilledStatus};
 })();
 
 Gameboard.renderBoard();
