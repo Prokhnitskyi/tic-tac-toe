@@ -53,6 +53,13 @@ body {
     place-items: center;
 }
 
+.board__cell--win {
+    background-color: #0a830a;
+    border: none;
+    z-index: 3;
+    transform: scale(1.05);
+}
+
 .board__cell:empty:hover {
     cursor: pointer;
     border: none;

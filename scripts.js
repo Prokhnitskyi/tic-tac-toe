@@ -74,7 +74,10 @@ const Gameboard = (function () {
 
         for (const gridSlicedElement in gridSliced) {
             allSame = gridSliced[gridSlicedElement].every(cell => cell === mark);
-            if (allSame === true) break;
+            if (allSame === true) {
+                colorLine(gridSlicedElement);
+                break;
+            }
         }
 
         return allSame;
@@ -82,21 +85,40 @@ const Gameboard = (function () {
 
     function getGridLines() {
         return {
-            row1: grid.slice(0, 3),
-            row2: grid.slice(3, 6),
-            row3: grid.slice(6),
-            col1: [grid.at(0), grid.at(3), grid.at(6)],
-            col2: [grid.at(1), grid.at(4), grid.at(7)],
-            col3: [grid.at(2), grid.at(5), grid.at(8)],
-            diag1: [grid.at(0), grid.at(4), grid.at(8)],
-            diag2: [grid.at(2), grid.at(4), grid.at(6)]
+            row0: grid.slice(0, 3),
+            row1: grid.slice(3, 6),
+            row2: grid.slice(6),
+            col0: [grid.at(0), grid.at(3), grid.at(6)],
+            col1: [grid.at(1), grid.at(4), grid.at(7)],
+            col2: [grid.at(2), grid.at(5), grid.at(8)],
+            dia0: [grid.at(0), grid.at(4), grid.at(8)],
+            dia1: [grid.at(2), grid.at(4), grid.at(6)]
         }
+    }
+
+    function colorLine(lineName) {
+        let cells = document.querySelectorAll('.board__cell');
+
+        switch (lineName) {
+            case 'dia0':
+                cells = [cells[0], cells[4], cells[8]];
+                break;
+            case 'dia1':
+                cells = [cells[2], cells[4], cells[6]];
+                break;
+            default:
+                const direction = lineName.slice(0, 3);
+                const value = lineName.slice(-1);
+                cells = document.querySelectorAll(`[data-${direction}="${value}"]`);
+        }
+
+        cells.forEach(cell => cell.classList.add('board__cell--win'));
     }
 
     return {renderBoard, startNewGame, makeTurn, getBoardFilledStatus};
 })();
 
-Gameboard.renderBoard();
+Gameboard.renderBoard(boardElement);
 Gameboard.startNewGame();
 
 boardElement.addEventListener('click', Gameboard.makeTurn);
