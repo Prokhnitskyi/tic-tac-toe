@@ -48,9 +48,17 @@ const Gameboard = (function () {
         if (element.textContent) return;
 
         const currentGame = games[currentGameIndex];
+        const playerObj = currentGame.players[currentPlayer];
         const cellIndex = element.dataset.index;
-        currentGame.players[currentPlayer].makeMark(cellIndex);
-        checkWinCondition();
+        playerObj.makeMark(cellIndex);
+        const winner = checkWinCondition(playerObj.mark);
+
+        if (winner === true) {
+            playerObj.gamesWon++;
+            console.log('Hooray! ' + playerObj.gamesWon);
+        } else if (getBoardFilledStatus() === true) {
+            console.log('Tie');
+        }
 
         currentPlayer = currentPlayer === 0 ? 1 : 0;
     }
@@ -58,6 +66,18 @@ const Gameboard = (function () {
     function getBoardFilledStatus() {
         boardFilled = grid.every(cell => Boolean(cell));
         return boardFilled;
+    }
+
+    function checkWinCondition(mark) {
+        const gridSliced= getGridLines();
+        let allSame = false;
+
+        for (const gridSlicedElement in gridSliced) {
+            allSame = gridSliced[gridSlicedElement].every(cell => cell === mark);
+            if (allSame === true) break;
+        }
+
+        return allSame;
     }
 
     function getGridLines() {
