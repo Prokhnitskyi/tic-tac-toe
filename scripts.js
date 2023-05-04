@@ -2,6 +2,7 @@ const boardElement = document.querySelector('#board');
 
 const GameBoard = (function () {
     let grid = ['', '', '', '', '', '', '', '', ''];
+    let selectedBoard;
     let games = [];
     let currentGameIndex;
     let currentPlayer = 0;
@@ -23,6 +24,7 @@ const GameBoard = (function () {
     }
 
     function renderBoard(board = boardElement) {
+        selectedBoard = board;
         board.innerHTML = grid.map((cellValue, index) => {
             const row = Math.floor((index / 3));
             const col = index % 3;
@@ -55,9 +57,8 @@ const GameBoard = (function () {
 
         if (winner === true) {
             playerObj.gamesWon++;
-            console.log('Hooray! ' + playerObj.gamesWon);
         } else if (getBoardFilledStatus() === true) {
-            console.log('Tie');
+            selectedBoard.classList.add('board--disabled');
         }
 
         currentPlayer = currentPlayer === 0 ? 1 : 0;
