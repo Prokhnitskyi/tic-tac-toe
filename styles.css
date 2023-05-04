@@ -24,7 +24,15 @@ body {
     color: #072236;
 }
 
+.content {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(300px, 1fr) minmax(280px, 1fr);
+    grid-template-rows: min-content 1fr;
+}
+
 .board {
+    grid-row: 1 / span 2;
     display: grid;
     grid-template-columns: repeat(3, minmax(100px, 150px));
     justify-content: center;
@@ -66,4 +74,54 @@ body {
     z-index: 2;
     background-color: rgb(140, 200, 252);
     transform: scale(1.04);
+}
+
+.controls {
+    display: flex;
+    padding: 0 1rem;
+    row-gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls__button {
+    width: 80%;
+    color: #f1f3fc;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.08rem;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 1rem;
+    background: #154167;
+    cursor: pointer;
+}
+
+.controls__button:active {
+    filter: brightness(1.2);
+}
+
+.results__player {
+    background-color: #fff;
+    border: 2px solid steelblue;
+    border-radius: 6px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+
+.results__name {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.modal {
+    border: none;
+    width: clamp(320px, 50vw, 640px);
+}
+
+.modal::backdrop {
+    backdrop-filter: blur(4px) brightness(0.8);
 }

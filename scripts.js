@@ -1,6 +1,6 @@
 const boardElement = document.querySelector('#board');
 
-const Gameboard = (function () {
+const GameBoard = (function () {
     let grid = ['', '', '', '', '', '', '', '', ''];
     let games = [];
     let currentGameIndex;
@@ -118,7 +118,7 @@ const Gameboard = (function () {
     return {renderBoard, startNewGame, makeTurn, getBoardFilledStatus};
 })();
 
-Gameboard.renderBoard(boardElement);
-Gameboard.startNewGame();
+GameBoard.renderBoard(boardElement);
+GameBoard.startNewGame();
 
-boardElement.addEventListener('click', Gameboard.makeTurn);
+boardElement.addEventListener('click', GameBoard.makeTurn);

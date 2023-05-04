@@ -15,8 +15,36 @@
 </header>
 <main class="content">
     <section class="board" id="board">
-
+    </section>
+    <section class="controls">
+        <button type="button" class="controls__button">Single-player Game</button>
+        <button type="button" class="controls__button">Multiplayer Game</button>
+        <button type="button" class="controls__button">Reset score</button>
+    </section>
+    <section class="results">
+        <div class="results__player" data-player="1">
+            <div class="results__name">Player 1</div>
+            <div>Games won: <span class="results__score">0</span></div>
+        </div>
+        <div class="results__player" data-player="2">
+            <div class="results__name">Player 2</div>
+            <div>Games won: <span class="results__score">0</span></div>
+        </div>
     </section>
 </main>
+<dialog id="new-game-config" class="modal">
+    <form method="dialog">
+        <div>
+            <label for="username1">Player 1:</label>
+            <input type="text" name="username1" id="username1" placeholder="John Doe">
+        </div>
+        <div>
+            <label for="username2">Player 2:</label>
+            <input type="text" name="username2" id="username2" placeholder="Mary Sue">
+        </div>
+        <button type="reset">Close</button>
+        <button type="submit">Submit</button>
+    </form>
+</dialog>
 </body>
 </html>
