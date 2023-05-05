@@ -117,14 +117,19 @@ body {
     border-radius: 6px;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(min-content, 1fr) min-content;
     row-gap: 0.5rem;
 }
 
 .results__name {
     font-weight: bold;
     font-size: 1.2rem;
+}
+
+.results__mark {
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .modal {

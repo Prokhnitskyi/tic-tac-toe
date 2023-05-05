@@ -45,8 +45,8 @@ const GameBoard = (function () {
 
     function startNewGame() {
         currentGameIndex = ++currentGameIndex || 0;
-        const player1 = Player({name: 'Player1'});
-        const player2 = Player({name: 'Player2', mark: 'O'});
+        const player1 = Player({name: 'Player 1', mark: '⛌'});
+        const player2 = Player({name: 'Player 2', mark: '◯'});
         const game = Game({
             index: currentGameIndex,
             players: [player1, player2]
