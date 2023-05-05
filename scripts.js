@@ -10,7 +10,7 @@ const GameBoard = (function () {
         let gamesWon = 0;
         const makeMark = (index) => {
             grid[index] = mark;
-            renderBoard();
+            renderBoard({});
         };
 
         return {name, mark, gamesWon, makeMark};
@@ -33,8 +33,15 @@ const GameBoard = (function () {
         return {index, players, updateScore, updateResultsView};
     }
 
-    function renderBoard(board = boardElement) {
+    function renderBoard({board = boardElement, clean = false}) {
         selectedBoard = board;
+
+        if (clean) {
+            grid.forEach((cell, index) => {
+                grid[index] = '';
+            })
+        }
+
         board.innerHTML = grid.map((cellValue, index) => {
             const row = Math.floor((index / 3));
             const col = index % 3;
@@ -52,6 +59,7 @@ const GameBoard = (function () {
             players: [player1, player2]
         });
         games.push(game);
+        selectedBoard.addEventListener('click', GameBoard.makeTurn);
     }
 
     function makeTurn(event) {
@@ -142,9 +150,8 @@ const GameBoard = (function () {
 
 const GameConfiguration = (function () {
     function initGameBoard(board) {
-        GameBoard.renderBoard(board);
+        GameBoard.renderBoard({board});
         GameBoard.startNewGame();
-        board.addEventListener('click', GameBoard.makeTurn);
     }
 
     return {initGameBoard}
