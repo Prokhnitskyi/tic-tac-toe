@@ -49,7 +49,7 @@ const GameBoard = (function () {
     }).join('\n');
   }
 
-  function startNewGame () {
+  function startNewGame (samePlayers = false) {
     renderBoard(true);
     boardElement.classList.remove('board--disabled');
     currentGameIndex = ++currentGameIndex || 0;
@@ -57,7 +57,7 @@ const GameBoard = (function () {
     const player2 = Player({ name: 'Player 2', mark: '◯' });
     const game = Game({
       index: currentGameIndex,
-      players: [player1, player2],
+      players: samePlayers ? games[currentGameIndex - 1].players : [player1, player2],
     });
     games.push(game);
     boardElement.addEventListener('click', GameBoard.makeTurn);
@@ -174,7 +174,7 @@ const GameConfiguration = (function () {
   function initGameBoard () {
     GameBoard.startNewGame();
     selectors.closeNextRoundBtn.addEventListener('click', closeModal);
-    //selectors.startNextRoundBtn.addEventListener('click', GameBoard.startNewRound);
+    selectors.startNextRoundBtn.addEventListener('click', () => GameBoard.startNewGame(true));
   }
 
   return { initGameBoard, selectors, showModal };
