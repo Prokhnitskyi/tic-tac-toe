@@ -57,8 +57,10 @@ const GameBoard = (function () {
 
         if (winner === true) {
             playerObj.gamesWon++;
+            selectedBoard.removeEventListener('click', GameBoard.makeTurn);
         } else if (getBoardFilledStatus() === true) {
             selectedBoard.classList.add('board--disabled');
+            selectedBoard.removeEventListener('click', GameBoard.makeTurn);
         }
 
         currentPlayer = currentPlayer === 0 ? 1 : 0;
@@ -77,7 +79,6 @@ const GameBoard = (function () {
             allSame = gridSliced[gridSlicedElement].every(cell => cell === mark);
             if (allSame === true) {
                 colorLine(gridSlicedElement);
-                selectedBoard.removeEventListener('click', GameBoard.makeTurn);
                 break;
             }
         }
@@ -121,7 +122,14 @@ const GameBoard = (function () {
     return {renderBoard, startNewGame, makeTurn, getBoardFilledStatus};
 })();
 
-GameBoard.renderBoard(boardElement);
-GameBoard.startNewGame();
+const GameConfiguration = (function () {
+    function initGameBoard(board) {
+        GameBoard.renderBoard(board);
+        GameBoard.startNewGame();
+        board.addEventListener('click', GameBoard.makeTurn);
+    }
 
-boardElement.addEventListener('click', GameBoard.makeTurn);
+    return {initGameBoard}
+})();
+
+GameConfiguration.initGameBoard(boardElement);
