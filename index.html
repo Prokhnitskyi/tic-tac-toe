@@ -17,9 +17,9 @@
     <section class="board" id="board">
     </section>
     <section class="controls">
-        <button type="button" class="button controls__button">Single-player Game</button>
-        <button type="button" class="button controls__button">Multiplayer Game</button>
-        <button type="button" class="button controls__button">Reset All</button>
+        <button type="button" class="button controls__button" id="single-player">Single-player Game</button>
+        <button type="button" class="button controls__button" id="multiplayer">Multiplayer Game</button>
+        <button type="button" class="button controls__button" id="hard-reset">Reset All</button>
     </section>
     <section class="results">
         <div class="results__player" data-player="1">
@@ -38,22 +38,26 @@
     <form method="dialog" class="next-round-form">
         <div class="round_results_text">lorem</div>
         <div>Start next round?</div>
-        <button type="submit" class="button end-game-modal__button" id="next-round-start">Yes</button>
-        <button type="reset" class="button end-game-modal__button" id="next-round-close">No</button>
+        <div class="button-wrap">
+            <button type="reset" class="button end-game-modal__button" id="next-round-close">No</button>
+            <button type="submit" class="button end-game-modal__button" id="next-round-start">Yes</button>
+        </div>
     </form>
 </dialog>
 <dialog id="new-game-config" class="config-modal">
-    <form method="dialog">
-        <div>
+    <form method="dialog" class="config-modal-form">
+        <div class="input-wrap">
             <label for="username1">Player 1:</label>
-            <input type="text" name="username1" id="username1" placeholder="John Doe">
+            <input type="text" name="username1" id="username1" value="John Doe" placeholder="John Doe" class="config-modal-form__input">
         </div>
-        <div>
+        <div class="input-wrap">
             <label for="username2">Player 2:</label>
-            <input type="text" name="username2" id="username2" placeholder="Mary Sue">
+            <input type="text" name="username2" id="username2" value="Mary Sue" placeholder="Mary Sue" class="config-modal-form__input">
         </div>
-        <button type="reset" class="button">Close</button>
-        <button type="submit" class="button">Submit</button>
+        <div class="button-wrap">
+            <button type="reset" class="button" id="config-close">Close</button>
+            <button type="submit" class="button" id="config-submit">Submit</button>
+        </div>
     </form>
 </dialog>
 </body>

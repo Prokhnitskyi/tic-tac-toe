@@ -49,18 +49,19 @@ const GameBoard = (function () {
     }).join('\n');
   }
 
-  function startNewGame (samePlayers = false) {
+  function startNewGame (samePlayers = false, names = ['Player 1', 'Player 2']) {
     renderBoard(true);
     boardElement.classList.remove('board--disabled');
     currentGameIndex = ++currentGameIndex || 0;
-    const player1 = Player({ name: 'Player 1', mark: '⛌' });
-    const player2 = Player({ name: 'Player 2', mark: '◯' });
+    const player1 = Player({ name: names[0], mark: '⛌' });
+    const player2 = Player({ name: names[1], mark: '◯' });
     const game = Game({
       index: currentGameIndex,
       players: samePlayers ? games[currentGameIndex - 1].players : [player1, player2],
     });
+    game.updateResultsView();
     games.push(game);
-    boardElement.addEventListener('click', GameBoard.makeTurn);
+    boardElement.addEventListener('click', makeTurn);
   }
 
   function makeTurn (event) {
@@ -87,7 +88,7 @@ const GameBoard = (function () {
   }
 
   function endRound (text) {
-    boardElement.removeEventListener('click', GameBoard.makeTurn);
+    boardElement.removeEventListener('click', makeTurn);
     GameConfiguration.showModal(GameConfiguration.selectors.nextRoundModal);
     GameConfiguration.selectors.nextRoundMessage.textContent = text;
   }
@@ -108,7 +109,6 @@ const GameBoard = (function () {
         break;
       }
     }
-
     return allSame;
   }
 
@@ -152,29 +152,55 @@ const GameBoard = (function () {
     return { container, name, score };
   }
 
-  return { renderBoard, startNewGame, makeTurn, getBoardFilledStatus };
+  return { startNewGame };
 })();
 
 const GameConfiguration = (function () {
   const selectors = {
     nextRoundModal: document.querySelector('#next-round'),
+    nextRoundForm: document.querySelector('.next-round-form'),
     nextRoundMessage: document.querySelector('.round_results_text'),
     closeNextRoundBtn: document.querySelector('#next-round-close'),
     startNextRoundBtn: document.querySelector('#next-round-start'),
+    singlePlayerBtn: document.querySelector('#single-player'),
+    multiplayerBtn: document.querySelector('#multiplayer'),
+    resetBtn: document.querySelector('#hard-reset'),
+    newGameModal: document.querySelector('#new-game-config'),
+    configForm: document.querySelector('.config-modal-form'),
+    closeConfigBtn: document.querySelector('#config-close'),
+    firstUsernameInput: document.querySelector('#username1'),
+    secondUsernameInput: document.querySelector('#username2'),
   };
 
   function closeModal () {
+    this.closest('form').reset();
     this.closest('dialog').close();
   }
 
   function showModal(modal) {
-    setTimeout(() => modal.showModal(),700);
+    setTimeout(() => modal.showModal(),500);
   }
+
+  function initSinglePlayerWithNames (event) {
+
+    GameBoard.startNewGame(false, getNames());
+  }
+
+  function getNames () {
+    return [
+      selectors.firstUsernameInput.value,
+      selectors.secondUsernameInput.value
+    ];
+  }
+
 
   function initGameBoard () {
     GameBoard.startNewGame();
     selectors.closeNextRoundBtn.addEventListener('click', closeModal);
-    selectors.startNextRoundBtn.addEventListener('click', () => GameBoard.startNewGame(true));
+    selectors.nextRoundForm.addEventListener('submit', () => GameBoard.startNewGame(true));
+    selectors.singlePlayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
+    selectors.multiplayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
+    selectors.configForm.addEventListener('submit', initSinglePlayerWithNames);
   }
 
   return { initGameBoard, selectors, showModal };
