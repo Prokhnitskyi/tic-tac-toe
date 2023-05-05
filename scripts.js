@@ -1,5 +1,3 @@
-const boardElement = document.querySelector('#board');
-
 const GameBoard = (function () {
     let grid = ['', '', '', '', '', '', '', '', ''];
     let selectedBoard;
@@ -19,8 +17,20 @@ const GameBoard = (function () {
     }
 
     function Game({index = 0, players}) {
-        let winner;
-        return {index, players, winner};
+        const updateResultsView = () => {
+            const player1ResultContainer = getResultsContainer('[data-player="1"]');
+            const player2ResultContainer = getResultsContainer('[data-player="2"]');
+
+            player1ResultContainer.name.textContent = players.at(0).name;
+            player1ResultContainer.score.textContent = players.at(0).gamesWon;
+
+            player2ResultContainer.name.textContent = players.at(1).name;
+            player2ResultContainer.score.textContent = players.at(1).gamesWon;
+        }
+        const updateScore = () => {
+            players[currentPlayer].gamesWon++
+        }
+        return {index, players, updateScore, updateResultsView};
     }
 
     function renderBoard(board = boardElement) {
@@ -35,8 +45,8 @@ const GameBoard = (function () {
 
     function startNewGame() {
         currentGameIndex = ++currentGameIndex || 0;
-        const player1 = Player({});
-        const player2 = Player({mark: "O"});
+        const player1 = Player({name: 'Player1'});
+        const player2 = Player({name: 'Player2', mark: 'O'});
         const game = Game({
             index: currentGameIndex,
             players: [player1, player2]
@@ -56,13 +66,14 @@ const GameBoard = (function () {
         const winner = checkWinCondition(playerObj.mark);
 
         if (winner === true) {
-            playerObj.gamesWon++;
+            currentGame.updateScore();
             selectedBoard.removeEventListener('click', GameBoard.makeTurn);
         } else if (getBoardFilledStatus() === true) {
             selectedBoard.classList.add('board--disabled');
             selectedBoard.removeEventListener('click', GameBoard.makeTurn);
         }
 
+        currentGame.updateResultsView();
         currentPlayer = currentPlayer === 0 ? 1 : 0;
     }
     
@@ -119,6 +130,13 @@ const GameBoard = (function () {
         cells.forEach(cell => cell.classList.add('board__cell--win'));
     }
 
+    function getResultsContainer(selector) {
+        const container = document.querySelector(selector);
+        const name = container.querySelector('.results__name');
+        const score = container.querySelector('.results__score');
+        return {container, name, score};
+    }
+
     return {renderBoard, startNewGame, makeTurn, getBoardFilledStatus};
 })();
 
@@ -132,4 +150,5 @@ const GameConfiguration = (function () {
     return {initGameBoard}
 })();
 
+const boardElement = document.querySelector('#board');
 GameConfiguration.initGameBoard(boardElement);
