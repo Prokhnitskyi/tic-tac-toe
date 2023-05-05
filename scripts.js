@@ -49,7 +49,7 @@ const GameBoard = (function () {
     }).join('\n');
   }
 
-  function startNewGame (samePlayers = false, names = ['Player 1', 'Player 2']) {
+  function startNewGame ({samePlayers = false, names = ['Player 1', 'Player 2']} = {samePlayers : false, names : ['Player 1', 'Player 2']}) {
     renderBoard(true);
     boardElement.classList.remove('board--disabled');
     currentGameIndex = ++currentGameIndex || 0;
@@ -68,7 +68,6 @@ const GameBoard = (function () {
     const element = event.target;
     if (!element.classList.contains('board__cell')) return;
     if (element.textContent) return;
-
     const currentGame = games[currentGameIndex];
     const playerObj = currentGame.players[currentPlayer];
     const cellIndex = element.dataset.index;
@@ -152,7 +151,14 @@ const GameBoard = (function () {
     return { container, name, score };
   }
 
-  return { startNewGame };
+  function resetModule () {
+    games = [];
+    currentGameIndex = -1; // magic number as alternative to assign undefined
+    currentPlayer = 0;
+    boardFilled = false;
+  }
+
+  return { startNewGame, resetModule };
 })();
 
 const GameConfiguration = (function () {
@@ -182,8 +188,7 @@ const GameConfiguration = (function () {
   }
 
   function initSinglePlayerWithNames (event) {
-
-    GameBoard.startNewGame(false, getNames());
+    GameBoard.startNewGame({samePlayers: false, names: getNames()});
   }
 
   function getNames () {
@@ -193,14 +198,21 @@ const GameConfiguration = (function () {
     ];
   }
 
+  function resetGameBoard () {
+    GameBoard.resetModule();
+    GameBoard.startNewGame();
+  }
+
 
   function initGameBoard () {
     GameBoard.startNewGame();
     selectors.closeNextRoundBtn.addEventListener('click', closeModal);
-    selectors.nextRoundForm.addEventListener('submit', () => GameBoard.startNewGame(true));
+    selectors.nextRoundForm.addEventListener('submit', () => GameBoard.startNewGame(
+      { samePlayers: true }));
     selectors.singlePlayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
     selectors.multiplayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
     selectors.configForm.addEventListener('submit', initSinglePlayerWithNames);
+    selectors.resetBtn.addEventListener('click', resetGameBoard);
   }
 
   return { initGameBoard, selectors, showModal };
