@@ -64,6 +64,7 @@ body {
 
     display: grid;
     place-items: center;
+    place-content: center;
 }
 
 .board__cell--end {

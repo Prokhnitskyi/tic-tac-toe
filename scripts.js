@@ -1,16 +1,17 @@
 const GameBoard = (function () {
+    const boardElement = document.querySelector('#board');
     let grid = ['', '', '', '', '', '', '', '', ''];
-    let selectedBoard;
     let games = [];
     let currentGameIndex;
     let currentPlayer = 0;
     let boardFilled = false;
 
+
     function Player({name = '', mark = 'X'}) {
         let gamesWon = 0;
         const makeMark = (index) => {
             grid[index] = mark;
-            renderBoard({});
+            renderBoard();
         };
 
         return {name, mark, gamesWon, makeMark};
@@ -33,8 +34,7 @@ const GameBoard = (function () {
         return {index, players, updateScore, updateResultsView};
     }
 
-    function renderBoard({board = boardElement, clean = false}) {
-        selectedBoard = board;
+    function renderBoard(clean = false) {
 
         if (clean) {
             grid.forEach((cell, index) => {
@@ -42,7 +42,7 @@ const GameBoard = (function () {
             })
         }
 
-        board.innerHTML = grid.map((cellValue, index) => {
+        boardElement.innerHTML = grid.map((cellValue, index) => {
             const row = Math.floor((index / 3));
             const col = index % 3;
 
@@ -51,6 +51,7 @@ const GameBoard = (function () {
     }
 
     function startNewGame() {
+        renderBoard(true);
         currentGameIndex = ++currentGameIndex || 0;
         const player1 = Player({name: 'Player 1', mark: '⛌'});
         const player2 = Player({name: 'Player 2', mark: '◯'});
@@ -59,7 +60,7 @@ const GameBoard = (function () {
             players: [player1, player2]
         });
         games.push(game);
-        selectedBoard.addEventListener('click', GameBoard.makeTurn);
+        boardElement.addEventListener('click', GameBoard.makeTurn);
     }
 
     function makeTurn(event) {
@@ -75,10 +76,10 @@ const GameBoard = (function () {
 
         if (winner === true) {
             currentGame.updateScore();
-            selectedBoard.removeEventListener('click', GameBoard.makeTurn);
+            boardElement.removeEventListener('click', GameBoard.makeTurn);
         } else if (getBoardFilledStatus() === true) {
-            selectedBoard.classList.add('board--disabled');
-            selectedBoard.removeEventListener('click', GameBoard.makeTurn);
+            boardElement.classList.add('board--disabled');
+            boardElement.removeEventListener('click', GameBoard.makeTurn);
         }
 
         currentGame.updateResultsView();
@@ -149,13 +150,12 @@ const GameBoard = (function () {
 })();
 
 const GameConfiguration = (function () {
-    function initGameBoard(board) {
-        GameBoard.renderBoard({board});
+    function initGameBoard() {
+        GameBoard.renderBoard();
         GameBoard.startNewGame();
     }
 
     return {initGameBoard}
 })();
 
-const boardElement = document.querySelector('#board');
-GameConfiguration.initGameBoard(boardElement);
+GameConfiguration.initGameBoard();
