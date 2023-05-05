@@ -187,7 +187,7 @@ const GameConfiguration = (function () {
     setTimeout(() => modal.showModal(),500);
   }
 
-  function initSinglePlayerWithNames (event) {
+  function initMultiplayer (event) {
     GameBoard.startNewGame({samePlayers: false, names: getNames()});
   }
 
@@ -211,7 +211,7 @@ const GameConfiguration = (function () {
       { samePlayers: true }));
     selectors.singlePlayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
     selectors.multiplayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
-    selectors.configForm.addEventListener('submit', initSinglePlayerWithNames);
+    selectors.configForm.addEventListener('submit', initMultiplayer);
     selectors.resetBtn.addEventListener('click', resetGameBoard);
   }
 
