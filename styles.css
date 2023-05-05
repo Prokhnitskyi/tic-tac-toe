@@ -66,14 +66,19 @@ body {
     place-items: center;
 }
 
+.board__cell--end {
+    filter: grayscale(1) blur(4px);
+}
+
 .board__cell--win {
     background-color: #0a830a;
+    filter: none !important;
     border: none;
     z-index: 3;
     transform: scale(1.05);
 }
 
-.board__cell:empty:hover {
+.board__cell:not(.board__cell--end):empty:hover {
     cursor: pointer;
     border: none;
     z-index: 2;

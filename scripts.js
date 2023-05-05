@@ -77,6 +77,7 @@ const GameBoard = (function () {
             allSame = gridSliced[gridSlicedElement].every(cell => cell === mark);
             if (allSame === true) {
                 colorLine(gridSlicedElement);
+                selectedBoard.removeEventListener('click', GameBoard.makeTurn);
                 break;
             }
         }
@@ -99,6 +100,7 @@ const GameBoard = (function () {
 
     function colorLine(lineName) {
         let cells = document.querySelectorAll('.board__cell');
+        cells.forEach(cell => cell.classList.add('board__cell--end'));
 
         switch (lineName) {
             case 'dia0':
