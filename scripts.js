@@ -6,14 +6,14 @@ const GameBoard = (function () {
   let currentPlayer = 0;
   let boardFilled = false;
 
-  function Player ({ name = '', mark = 'X' }) {
+  function Player ({ name = '', mark = 'X', bot = false }) {
     let gamesWon = 0;
     const makeMark = (index) => {
       grid[index] = mark;
       renderBoard();
     };
 
-    return { name, mark, gamesWon, makeMark };
+    return { name, mark, gamesWon, makeMark, bot };
   }
 
   function Game ({ index = 0, players }) {
@@ -35,11 +35,7 @@ const GameBoard = (function () {
 
   function renderBoard (clean = false) {
 
-    if (clean) {
-      grid.forEach((cell, index) => {
-        grid[index] = '';
-      });
-    }
+    if (clean) grid.fill('');
 
     boardElement.innerHTML = grid.map((cellValue, index) => {
       const row = Math.floor((index / 3));
@@ -84,6 +80,20 @@ const GameBoard = (function () {
 
     currentGame.updateResultsView();
     currentPlayer = currentPlayer === 0 ? 1 : 0;
+  }
+
+  function getRandomIndex () {
+    const emptyLength = grid.filter(cell => cell === '').length;
+    const itemNumber = Math.floor(Math.random() * emptyLength + 1);
+    let counter = 1;
+    let index;
+    for (let i = 0; i < grid.length; i++) {
+      if (grid[i] === '' && counter === itemNumber) {
+        index = i;
+      }
+      if (grid[i] === '') counter++;
+    }
+    return index;
   }
 
   function endRound (text) {
@@ -158,7 +168,7 @@ const GameBoard = (function () {
     boardFilled = false;
   }
 
-  return { startNewGame, resetModule };
+  return { startNewGame, resetModule, getRandomIndex };
 })();
 
 const GameConfiguration = (function () {
