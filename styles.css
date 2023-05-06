@@ -174,3 +174,18 @@ dialog::backdrop {
     justify-content: space-between;
     align-items: center;
 }
+
+@media screen and (max-width: 620px) {
+    .header__title {
+        margin-top: 0;
+        font-size: 1.4rem;
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+    .board__cell {
+        font-size: 3rem;
+    }
+}
