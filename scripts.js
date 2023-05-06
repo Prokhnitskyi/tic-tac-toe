@@ -181,7 +181,7 @@ const GameBoard = (function () {
     boardFilled = false;
   }
 
-  return { startNewGame, resetModule, getRandomIndex };
+  return { startNewGame, resetModule };
 })();
 
 const GameConfiguration = (function () {
@@ -223,7 +223,7 @@ const GameConfiguration = (function () {
     showModal(selectors.newGameModal);
   }
 
-  function initNewGame (event) {
+  function initNewGame () {
     const bot = this.dataset.mode !== 'multiplayer';
     GameBoard.startNewGame({samePlayers: false, names: getNames(), bot});
   }
