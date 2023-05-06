@@ -199,6 +199,7 @@ const GameConfiguration = (function () {
     closeConfigBtn: document.querySelector('#config-close'),
     firstUsernameInput: document.querySelector('#username1'),
     secondUsernameInput: document.querySelector('#username2'),
+    secondUsernameLabel: document.querySelector('[for="username2"]'),
   };
 
   function closeModal () {
@@ -210,8 +211,21 @@ const GameConfiguration = (function () {
     setTimeout(() => modal.showModal(),500);
   }
 
-  function initMultiplayer (event) {
-    GameBoard.startNewGame({samePlayers: false, names: getNames(), bot: false});
+  function showSinglePlayerModal () {
+    selectors.configForm.dataset.mode = 'singlePlayer';
+    selectors.secondUsernameLabel.textContent = 'Bot: '
+    showModal(selectors.newGameModal);
+  }
+
+  function showMultiplayerModal () {
+    selectors.configForm.dataset.mode = 'multiplayer';
+    selectors.secondUsernameLabel.textContent = 'Player 2: '
+    showModal(selectors.newGameModal);
+  }
+
+  function initNewGame (event) {
+    const bot = this.dataset.mode !== 'multiplayer';
+    GameBoard.startNewGame({samePlayers: false, names: getNames(), bot});
   }
 
   function getNames () {
@@ -232,10 +246,11 @@ const GameConfiguration = (function () {
     selectors.closeNextRoundBtn.addEventListener('click', closeModal);
     selectors.nextRoundForm.addEventListener('submit', () => GameBoard.startNewGame(
       { samePlayers: true }));
-    selectors.singlePlayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
-    selectors.multiplayerBtn.addEventListener('click', () => showModal(selectors.newGameModal));
-    selectors.configForm.addEventListener('submit', initMultiplayer);
+    selectors.singlePlayerBtn.addEventListener('click', showSinglePlayerModal);
+    selectors.multiplayerBtn.addEventListener('click', showMultiplayerModal);
+    selectors.configForm.addEventListener('submit', initNewGame);
     selectors.resetBtn.addEventListener('click', resetGameBoard);
+    selectors.closeConfigBtn.addEventListener('click', closeModal);
   }
 
   return { initGameBoard, selectors, showModal };

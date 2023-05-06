@@ -161,6 +161,10 @@ dialog::backdrop {
     column-gap: 0.5rem;
 }
 
+.input-wrap label {
+    min-width: 10ch;
+}
+
 .config-modal-form__input {
     border: 1px solid darkslategrey;
     border-radius: 4px;
