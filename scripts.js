@@ -45,41 +45,54 @@ const GameBoard = (function () {
     }).join('\n');
   }
 
-  function startNewGame ({samePlayers = false, names = ['Player 1', 'Player 2']} = {samePlayers : false, names : ['Player 1', 'Player 2']}) {
+  function startNewGame (
+    { samePlayers = false, names = ['Player 1', 'Player 2'], bot = true } =
+      { samePlayers: false, names: ['Player 1', 'Bot'], bot: true }) {
     renderBoard(true);
+    currentPlayer = 0;
     boardElement.classList.remove('board--disabled');
     currentGameIndex = ++currentGameIndex || 0;
     const player1 = Player({ name: names[0], mark: '⛌' });
-    const player2 = Player({ name: names[1], mark: '◯' });
+    const player2 = Player({ name: names[1], mark: '◯', bot });
     const game = Game({
       index: currentGameIndex,
-      players: samePlayers ? games[currentGameIndex - 1].players : [player1, player2],
+      players: samePlayers ? games[currentGameIndex - 1].players : [
+        player1,
+        player2],
     });
     game.updateResultsView();
     games.push(game);
-    boardElement.addEventListener('click', makeTurn);
+    boardElement.addEventListener('click', handleTurnEvent);
   }
 
-  function makeTurn (event) {
+  function handleTurnEvent (event) {
     const element = event.target;
     if (!element.classList.contains('board__cell')) return;
     if (element.textContent) return;
+    const cellIndex = element.dataset.index;
+    makeTurn(cellIndex);
+  }
+
+  function makeTurn (cellIndex) {
     const currentGame = games[currentGameIndex];
     const playerObj = currentGame.players[currentPlayer];
-    const cellIndex = element.dataset.index;
     playerObj.makeMark(cellIndex);
     const winner = checkWinCondition(playerObj.mark);
+    const filled = getBoardFilledStatus();
 
     if (winner === true) {
       currentGame.updateScore();
       endRound(`${playerObj.name} won!`);
-    } else if (getBoardFilledStatus() === true) {
+    } else if (filled === true) {
       boardElement.classList.add('board--disabled');
       endRound('Tie!');
     }
 
     currentGame.updateResultsView();
     currentPlayer = currentPlayer === 0 ? 1 : 0;
+    if (currentGame.players[currentPlayer].bot && !winner && !filled) {
+      makeTurn(getRandomIndex());
+    }
   }
 
   function getRandomIndex () {
@@ -97,7 +110,7 @@ const GameBoard = (function () {
   }
 
   function endRound (text) {
-    boardElement.removeEventListener('click', makeTurn);
+    boardElement.removeEventListener('click', handleTurnEvent);
     GameConfiguration.showModal(GameConfiguration.selectors.nextRoundModal);
     GameConfiguration.selectors.nextRoundMessage.textContent = text;
   }
@@ -198,7 +211,7 @@ const GameConfiguration = (function () {
   }
 
   function initMultiplayer (event) {
-    GameBoard.startNewGame({samePlayers: false, names: getNames()});
+    GameBoard.startNewGame({samePlayers: false, names: getNames(), bot: false});
   }
 
   function getNames () {
